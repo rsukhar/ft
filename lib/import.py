@@ -2,7 +2,7 @@ import datetime
 import mysql.connector
 
 if __name__ == '__main__':
-    import tradetime
+    import TradeTime as tradetime
 else:
     import lib.tradetime as tradetime
 

@@ -23,12 +23,3 @@ def timerange(dtime_start, dtime_end):
             dtime = daystart(dtime + datetime.timedelta(days=1))
         else:
             dtime += minute
-
-
-if __name__ == '__main__':
-    # First: iteration
-    dtime_start = datetime.datetime(2010, 10, 10, 15, 20)
-    dtime_end = datetime.datetime(2010, 10, 11, 9, 45)
-    for dtime in timerange(dtime_start, dtime_end):
-        print(dtime)
-        # Second: minutes diff

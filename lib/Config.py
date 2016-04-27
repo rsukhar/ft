@@ -1,5 +1,6 @@
 import os.path
 from configparser import ConfigParser, NoSectionError
+from collections import OrderedDict
 
 
 class Config(object):
@@ -11,11 +12,12 @@ class Config(object):
         if Config.data is not None:
             return
         parser = ConfigParser()
+        parser.optionxform = str
         config_file = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/config.ini'
         parser.read(config_file)
-        Config.data = {}
+        Config.data = OrderedDict()
         for section in parser.sections():
-            Config.data[section] = {}
+            Config.data[section] = OrderedDict()
             for key, value in parser.items(section):
                 Config.data[section][key] = value
 

@@ -13,10 +13,6 @@ def date_to_key(date):
     return date.strftime('%y%m%d')
 
 
-def trade_days(dtime_start, dtime_end):
-
-
-
 def trade_dates(dtime_start, dtime_end):
     schedule = (930, 1559)
     day = key_to_date(dtime_start)

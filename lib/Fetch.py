@@ -13,8 +13,8 @@ class Fetch(object):
     def quotes_to_file(ticker, year, filename, force=False):
         if not force and os.path.isfile(filename):
             return
-        remote_host = Config.get('Fetch', 'remote_host', fallback=None)
-        ticker_code = Config.get('FetchTickerCodes', ticker, fallback=None)
+        remote_host = Config.get('fetch.host', fallback=None)
+        ticker_code = Config.get('fetch.ticker_codes.' + ticker, fallback=None)
         if remote_host is None or ticker_code is None:
             return
         # Imitating the website-generated URL for the whole year

@@ -1,5 +1,5 @@
 import os.path
-from configparser import ConfigParser, NoSectionError
+import json
 from collections import OrderedDict
 
 
@@ -11,18 +11,25 @@ class Config(object):
         """ Load config data from file to Config.data variable once """
         if Config.data is not None:
             return
-        parser = ConfigParser()
-        parser.optionxform = str
-        config_file = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/config.ini'
-        parser.read(config_file)
-        Config.data = OrderedDict()
-        for section in parser.sections():
-            Config.data[section] = OrderedDict()
-            for key, value in parser.items(section):
-                Config.data[section][key] = value
+        config_filename = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/config.json'
+        with open(config_filename) as config_file:
+            Config.data = json.load(config_file, object_pairs_hook=OrderedDict)
 
     @staticmethod
-    def get(section, key=None, fallback=None):
+    def get(path, fallback=None):
+        """ Get config value by the dots-separated keys path (like 'db.user') """
+        Config.__load_once()
+        keys = path.split('.')
+        value = Config.data
+        for key in keys:
+            if key in value:
+                value = value[key]
+            else:
+                return fallback
+        return value
+
+    @staticmethod
+    def old_get(section, key=None, fallback=None):
         """ Get the requested config value or section """
         Config.__load_once()
         if section not in Config.data:

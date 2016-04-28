@@ -1,9 +1,13 @@
 import datetime
+import lib.tradetime as tradetime
 
+from lib.Config import Config
 from lib.DB import DB
 
 
 class Data(object):
+    db = None
+
     @staticmethod
     def trade_dates(ticker, min_date=None, max_date=None, as_dtime=True):
         """ Get a list of trade days for provided ticker """
@@ -34,12 +38,31 @@ class Data(object):
     @staticmethod
     def quotes(columns, ticker, dtime_from, dtime_to, market_hours=True):
         """ Get minutely ticker quotes for the given time range """
-        pass
+        if Data.db is None:
+            Data.db = DB().db
+        if 'dtime' not in columns:
+            columns[0:0] = ['dtime']
+        cursor = Data.db.cursor()
+        query = 'select `' + '`, `'.join(columns) + '` from `quotes` '
+        query += 'where `ticker` = %s and `dtime` between %s and %s order by `dtime` asc'
+        cursor.execute(query, (ticker, dtime_from, dtime_to))
+        for entry in cursor:
+            yield entry
+        cursor.close()
 
     @staticmethod
     def day_quotes(columns, ticker, date, market_hours=True):
         """ Get minutely ticker quotes for the given day """
-        pass
+        if isinstance(date, datetime.date):
+            date = datetime.datetime.combine(date, datetime.time(0, 0))
+        if market_hours:
+            dtime_from = tradetime.daystart(date)
+            dtime_to = tradetime.dayend(date)
+        else:
+            dtime_from = date.replace(hour=0, minute=0)
+            dtime_to = date.replace(hour=23, minute=59)
+        # No need to separately filter market hours in Data.quotes as the needed time range is already set here
+        return Data.quotes(columns, ticker, dtime_from, dtime_to, market_hours=False)
 
     @staticmethod
     def indicators(names, ticker, dtime_from, dtime_to):

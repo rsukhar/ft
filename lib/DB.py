@@ -9,13 +9,15 @@ class DB(object):
 
     def __init__(self):
         self.db = mysql.connector.connect(**Config.get('db'))
+        self.cursor = self.db.cursor()
 
     def commit(self):
         self.db.commit()
 
     def close(self):
         self.commit()
-        self.close()
+        self.cursor.close()
+        self.db.close()
 
 
 class DBInstaller(DB):
@@ -26,7 +28,6 @@ class DBInstaller(DB):
     """
 
     def install(self, safe=True):
-        self.cursor = self.db.cursor()
         if not safe:
             # Deleting all the existing tables before proceeding
             self.cursor.execute('show tables')
@@ -165,7 +166,7 @@ class DBInserter(DB):
         self.indicators_entries = []
 
     def insert(self, ticker, dtime, open, high, low, close, vol):
-        query_keys = '"%s", "%s"' % (ticker, dtime.strftime('%Y-%m-%d %H:%M:%S'))
+        query_keys = '"%s", "%s"' % (ticker, dtime)
         query_values = '%d, %d, %d, %d, %d' % (int(float(open) * 100),
                                                int(float(high) * 100),
                                                int(float(low) * 100),
@@ -180,11 +181,10 @@ class DBInserter(DB):
     def commit(self):
         if len(self.quotes_entries) == 0:
             return
-        cursor = self.db.cursor()
-        cursor.execute(self.quotes_query_base + ', '.join(self.quotes_entries))
+        self.cursor.execute(self.quotes_query_base + ', '.join(self.quotes_entries))
         self.quotes_entries.clear()
         if len(self.indicators_tables) > 0:
             for indicator_table in self.indicators_tables:
-                cursor.execute(self.indicators_query_base.format(indicator_table) + ', '.join(self.indicators_entries))
+                self.cursor.execute(self.indicators_query_base.format(indicator_table) + ', '.join(self.indicators_entries))
             self.indicators_entries.clear()
         self.db.commit()

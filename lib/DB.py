@@ -1,6 +1,7 @@
 import mysql.connector
 
 from collections import OrderedDict
+
 from lib.Config import Config
 
 
@@ -185,6 +186,45 @@ class DBInserter(DB):
         self.quotes_entries.clear()
         if len(self.indicators_tables) > 0:
             for indicator_table in self.indicators_tables:
-                self.cursor.execute(self.indicators_query_base.format(indicator_table) + ', '.join(self.indicators_entries))
+                self.cursor.execute(
+                    self.indicators_query_base.format(indicator_table) + ', '.join(self.indicators_entries))
             self.indicators_entries.clear()
+        self.db.commit()
+
+
+class DBUpdater(DB):
+    """
+    Updates indicators in the relevant tables.
+    Note: the range of entries updated within a single commit should be continuous.
+    """
+
+    def __init__(self, ticker, indicator, limit=1000):
+        DB.__init__(self)
+        self.limit = limit
+        tables = [table for table, indicators in Config.get('dbstructure').items() if indicator in indicators]
+        if len(tables) == 0:
+            raise Exception('Indicator %s is not found in database' % indicator)
+        self.query_start = 'update `%s` set `%s` = (case ' % (tables[0], indicator)
+        self.query_end = ' end) where `ticker` = "%s" and `dtime` between "{}" and "{}"' % ticker
+        self.entries = []
+        self.min_dtime = None
+        self.max_dtime = None
+
+    def update(self, dtime, value):
+        self.entries.append('when `dtime` = "%s" then %s' % (dtime, value))
+        if self.min_dtime is None or dtime < self.min_dtime:
+            self.min_dtime = dtime
+        if self.max_dtime is None or dtime > self.max_dtime:
+            self.max_dtime = dtime
+        if len(self.entries) >= self.limit:
+            self.commit()
+
+    def commit(self):
+        if len(self.entries) == 0:
+            return
+        query_end = self.query_end.format(self.min_dtime, self.max_dtime)
+        self.cursor.execute(self.query_start + ' '.join(self.entries) + query_end)
+        self.min_dtime = None
+        self.max_dtime = None
+        self.entries.clear()
         self.db.commit()

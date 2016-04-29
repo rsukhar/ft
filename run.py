@@ -1,5 +1,5 @@
 import lib.indicators as indicators
-import indicator.ema as ema
+import indicators.mas as ema
 
 if __name__ == '__main__':
     # updater = indicators.MySQLIndicatorsUpdate('AAPL', 'ma', 'ema12')

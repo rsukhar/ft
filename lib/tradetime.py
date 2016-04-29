@@ -1,25 +1,26 @@
 import datetime
 
-DAY_START = {'hour': 10, 'minute': 30}
-DAY_END = {'hour': 16, 'minute': 59}
+start = datetime.time(10, 30)
+end = datetime.time(16, 59)
 
 
 def daystart(dtime):
     """The first trading minute of the provided day"""
-    return dtime.replace(**DAY_START)
+    return dtime.replace(hour=start.hour, minute=start.minute)
 
 
 def dayend(dtime):
     """The last trading minute of the provided day"""
-    return dtime.replace(**DAY_END)
+    return dtime.replace(hour=end.hour, minute=end.minute)
 
 
 def timerange(dtime_start, dtime_end):
+    """ Get each minute of market working hours within the requested range """
     dtime = dtime_start
     minute = datetime.timedelta(minutes=1)
     while dtime <= dtime_end:
         yield dtime
-        if dtime.hour == DAY_END['hour'] and dtime.minute == DAY_END['minute']:
+        if dtime.hour == end.hour and dtime.minute == end.minute:
             dtime = daystart(dtime + datetime.timedelta(days=1))
         else:
             dtime += minute

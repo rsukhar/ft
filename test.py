@@ -1,7 +1,8 @@
-from lib.DB import DBInstaller
-from lib.Fetch import Fetch
+import datetime
+
+from lib.Count import Count
 
 if __name__ == '__main__':
-    DBInstaller().install(False)
-    for year in range(2009, 2017):
-        Fetch.import_quotes('AAPL', '/srv/ft/data/AAPL/quotes-' + str(year) + '.csv')
+    # Count.indicators(['ema12', 'ema26'], 'AAPL')
+    Count.indicators('chances', 'AAPL')
+

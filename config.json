@@ -11,7 +11,8 @@
       "high": "int(10) unsigned",
       "low": "int(10) unsigned",
       "close": "int(10) unsigned",
-      "vol": "int(10) unsigned"
+      "vol": "int(10) unsigned",
+      "vwap": "int(10) unsigned"
     },
     "mas": {
       "ema12": "int(10) unsigned",

@@ -6,7 +6,8 @@ from lib.DB import DB
 
 
 class Data(object):
-    db = None
+    _db = None
+    _cursor = None
 
     @staticmethod
     def trade_dates(ticker, min_date=None, max_date=None, as_dtime=True):
@@ -38,11 +39,11 @@ class Data(object):
     @staticmethod
     def quotes(columns, ticker, dtime_from, dtime_to, market_hours=True, order='asc'):
         """ Get minutely ticker quotes for the given time range """
-        if Data.db is None:
-            Data.db = DB().db
+        if Data._db is None:
+            Data._db = DB().db
         if 'dtime' not in columns:
             columns[0:0] = ['dtime']
-        cursor = Data.db.cursor()
+        cursor = Data._db.cursor()
         query = 'select `' + '`, `'.join(columns) + '` from `quotes` '
         query += 'where `ticker` = %s and `dtime` between %s and %s '
         if market_hours:
@@ -68,22 +69,33 @@ class Data(object):
         return Data.quotes(columns, ticker, dtime_from, dtime_to, market_hours=False, order=order)
 
     @staticmethod
-    def indicators(indicators, ticker, dtime_from, dtime_to, market_hours=True, order='asc'):
-        """ Get minutely ticker indicators' values for the given time range """
-        if Data.db is None:
-            Data.db = DB().db
-        if isinstance(indicators, str):
+    def get(columns, ticker, dtime_from=None, dtime_to=None, date=None, market_hours=True, order='asc'):
+        """
+        Get minutely quote values for the given time range or date
+        :param columns: Iterable set of columns that should be obtained
+        :param ticker: Ticker name
+        :param dtime_from: When selecting by time range: Time range start
+        :param dtime_to: When selecting by time range: Time range end
+        :param date: When selecting by date: Date
+        :param market_hours: Should the data be obtained only within market hours?
+        :param order: Records datetime order: 'asc' - old first, 'desc' - new first
+        :return: Iterable generator with tuples for dtime + specified columns
+        """
+        if Data._db is None:
+            Data._db = DB().db
+            Data._cursor = Data._db.cursor()
+        if isinstance(columns, str):
             # Specified indicators group: need to get all of them
-            indicators = Config.get('dbstructure.' + indicators).keys()
+            columns = Config.get('dbstructure.' + columns).keys()
         # MySQL tables that will be used and inner columns
         tables = []
         query_columns = []
-        for indicator in indicators:
+        for column in columns:
             for table, table_indicators in Config.get('dbstructure').items():
-                if indicator in table_indicators:
+                if column in table_indicators:
                     if len(query_columns) == 0:
                         query_columns.append('`%s`.`dtime`' % table)
-                    query_columns.append('`%s`.`%s`' % (table, indicator))
+                    query_columns.append('`%s`.`%s`' % (table, column))
                     if table not in tables:
                         tables.append(table)
                     break
@@ -91,8 +103,19 @@ class Data(object):
             return
         query = 'select ' + ', '.join(query_columns) + ' from `' + '`, `'.join(tables) + '` '
         query += 'where `%s`.`ticker` = "%s" ' % (tables[0], ticker)
+        if date is not None:
+            if isinstance(date, datetime.date):
+                date = datetime.datetime.combine(date, datetime.time(0, 0))
+            elif isinstance(date, str):
+                date = datetime.datetime.strptime(date, '%Y-%m-%d')
+            if market_hours:
+                dtime_from = tradetime.daystart(date)
+                dtime_to = tradetime.dayend(date)
+            else:
+                dtime_from = date.replace(hour=0, minute=0)
+                dtime_to = date.replace(hour=23, minute=59)
         query += 'and `%s`.`dtime` between "%s" and "%s" ' % (tables[0], dtime_from, dtime_to)
-        if market_hours:
+        if market_hours and date is None:
             query += 'and time(`%s`.`dtime`) between "%s" and "%s" ' % (tables[0], tradetime.start, tradetime.end)
         # Joining tables
         for table in tables:
@@ -101,20 +124,6 @@ class Data(object):
             query += 'and `%s`.`ticker` = `%s`.`ticker` ' % (table, tables[0])
             query += 'and `%s`.`dtime` = `%s`.`dtime` ' % (table, tables[0])
         query += 'order by `dtime` ' + order
-        print(query)
-        pass
-
-    @staticmethod
-    def day_indicators(names, ticker, date, order='asc'):
-        """ Get minutely ticker indicators' values for the given day """
-        pass
-
-    @staticmethod
-    def chances(ticker, dtime_from, dtime_to):
-        """ Get minutely ticker chances values for the given time range """
-        pass
-
-    @staticmethod
-    def day_chances(ticker, date):
-        """ Get minutely ticker chances values for the given day """
-        pass
+        Data._cursor.execute(query)
+        for entry in Data._cursor:
+            yield entry

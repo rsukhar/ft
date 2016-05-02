@@ -9,7 +9,7 @@ class CountMas(DBIndicatorCounter):
         :link https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
         """
         if data is None:
-            data = Data.day_quotes(['vwap'], self.ticker, date, market_hours=True)
+            data = Data.get(['vwap'], self.ticker, date=date, market_hours=True)
         alpha = 2 / (self.period + 1)
         index = 0
         initial_sum = 0

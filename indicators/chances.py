@@ -8,7 +8,7 @@ class CountChances(DBIndicatorCounter):
         Relative price difference in the next N minutes
         """
         if data is None:
-            data = Data.day_quotes(['open', 'vwap'], self.ticker, date, market_hours=True, order='desc')
+            data = Data.get(['open', 'vwap'], self.ticker, date=date, market_hours=True, order='desc')
         history = []
         index = 0
         for dtime, open, vwap in data:

@@ -37,38 +37,6 @@ class Data(object):
         pass
 
     @staticmethod
-    def quotes(columns, ticker, dtime_from, dtime_to, market_hours=True, order='asc'):
-        """ Get minutely ticker quotes for the given time range """
-        if Data._db is None:
-            Data._db = DB().db
-        if 'dtime' not in columns:
-            columns[0:0] = ['dtime']
-        cursor = Data._db.cursor()
-        query = 'select `' + '`, `'.join(columns) + '` from `quotes` '
-        query += 'where `ticker` = %s and `dtime` between %s and %s '
-        if market_hours:
-            query += 'and time(`dtime`) between "%s" and "%s" ' % (tradetime.start, tradetime.end)
-        query += 'order by `dtime` ' + order
-        cursor.execute(query, (ticker, dtime_from, dtime_to))
-        for entry in cursor:
-            yield entry
-        cursor.close()
-
-    @staticmethod
-    def day_quotes(columns, ticker, date, market_hours=True, order='asc'):
-        """ Get minutely ticker quotes for the given day """
-        if isinstance(date, datetime.date):
-            date = datetime.datetime.combine(date, datetime.time(0, 0))
-        if market_hours:
-            dtime_from = tradetime.daystart(date)
-            dtime_to = tradetime.dayend(date)
-        else:
-            dtime_from = date.replace(hour=0, minute=0)
-            dtime_to = date.replace(hour=23, minute=59)
-        # No need to separately filter market hours in Data.quotes as the needed time range is already set here
-        return Data.quotes(columns, ticker, dtime_from, dtime_to, market_hours=False, order=order)
-
-    @staticmethod
     def get(columns, ticker, dtime_from=None, dtime_to=None, date=None, market_hours=True, order='asc'):
         """
         Get minutely quote values for the given time range or date
@@ -127,3 +95,4 @@ class Data(object):
         Data._cursor.execute(query)
         for entry in Data._cursor:
             yield entry
+        Data._db.commit()

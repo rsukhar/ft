@@ -1,0 +1,34 @@
+| *Код*           | *Название англ*                           | *Название рус*                                 | *Тип*         | *Важн* | *Сложн* |
+| MA              | Moving Average                            | Скользящая средняя                             | трендовый     |      1 |       1 |
+| EMA             | Exponential Moving Average                | Экспоненциальная Скользящая Средняя            | трендовый     |      1 |       1 |
+| MACD            | Moving Average Conv-Div                   | Конвергенция-Дивергенция Скользящей Средней    | трендовый     |      5 |       2 |
+| DPO             | Detrended Price Oscillator                | Детрендовый Ценовой Осциллятор                 | циклический   |      4 |       1 |
+| CMF             | Chaykin Money Flow                        | Денежный Поток Чайкина                         | объема        |      3 |       1 |
+| ATR             | Average True Range                        | Средний Истинный Диапазон                      | волатильности |      3 |       1 |
+| RSI             | Relative Strength Index                   | Индекс Относительной Силы                      | инерциальный  |      4 |       1 |
+| SRSI            | Stochastic Relative Strength Index        | Стохастический Индекс Относительной Силы       | инерциальный  |      4 |       2 |
+| ADR             | Advance Decline Ratio                     | Индикатор Повышения и Падения                  | инерциальный  |      2 |       1 |
+| SO              | Stochastic Oscillator                     | Стохастический Осциллятор                      | инерциальный  |      4 |       2 |
+| RVI             | Relative Vigor Index                      | Индекс Относительной Бодрости                  | трендовый     |      2 |       1 |
+| TEMA            | Triple Exponential Moving Average         | Тройная Экспоненциальная Скользящая Средняя    | трендовый     |      4 |       2 |
+| TEMACD          | TEMA Conv-Div                             | Конвергенция-Дивергенция TEMA                  | трендовый     |      4 |       2 |
+| TRIX            | Triple Exponential Moving Average         | Тройная Экспоненциальная Скользящая Средняя    | трендовый     |      4 |       2 |
+| TRIXCD          | TRIX Conv-Div                             | Конвергенция-Дивергенция TRIX                  | трендовый     |      4 |       2 |
+| MFI             | Money Flow Index                          | Индекс Денежного Потока                        | объема        |      4 |       2 |
+| DEMA            | Double Exponential Moving Average         | Двойная Экспоненциальная Скользящая Средняя    | трендовый     |      4 |       2 |
+| DEMACD          | DEMA Conv-Div                             | Конвергенция-Дивергенция DEMA                  | трендовый     |      4 |       2 |
+| PPO             | Percentage Price Oscillator               | Процентный Ценовой Осциллятор                  | трендовый     |      4 |       2 |
+| TMA             | Triangular Moving Average                 | Треугольное Скользящее Среднее                 | трендовый     |      5 |       3 |
+| TMACD           | TMA Conv-Div                              | Конвергенция-Дивергенция TMA                   | трендовый     |      5 |       3 |
+| STC             | Schaff Trend Cycle                        | Циклический Индикатор Тренда Шаффа             | циклический   |      3 |       2 |
+| AroonUp         | Aroon Indicator Up                        | Индикатор Aroon Up                             | инерциальный  |      3 |       2 |
+| AroonDown       | Aroon Indicator Down                      | Индикатор Aroon Down                           | инерциальный  |      3 |       2 |
+| Aroon           | Aroon Oscillator                          | Осциллятор Aroon                               | инерциальный  |      3 |       2 |
+| PSAR            | Parabolic Stop and Reverse                | Параболическая Остановка и Разворот            | трендовый     |      3 |       2 |
+| BandWidth       | Bollinger BandWidth                       | Ширина Полос Боллинджера                       | волатильности |      3 |       2 |
+| CCI             | Commodity Channel Index                   | Индикатор Товарного Канала                     | трендовый     |      3 |       3 |
+| ADX             | Average Directional Movement Index        | Индекс Средней Направленности Движения         | трендовый     |      2 |       2 |
+| ADXR            | Average Directional Movement Index Rating | Оценка Индекса Средней Направленности Движения | трендовый     |      1 |       1 |
+| CSI             | Commodity Selection Index                 | Индекс Выбора Товара                           | трендовый     |      2 |       2 |
+| ChandelierStops | Chandelier Exit                           | Стопы Chandelier                               | волатильности |      1 |       1 |
+| ELLIOTT         | Elliott Waves                             | Волны Эллиотта                                 | паттерновый   |      5 |       5 |

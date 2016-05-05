@@ -44,7 +44,7 @@ class DBInstaller(DB):
             if table not in cur_db:
                 # Creating missing table
                 self.__create_table(table, req_columns)
-                if table != 'quotes':
+                if table != 'Quotes':
                     self.__import_keys_from_quotes(table)
             elif cur_db[table] != req_columns:
                 # Updating the existing tables that differ from the target
@@ -116,7 +116,7 @@ class DBInstaller(DB):
     def __import_keys_from_quotes(self, table):
         """ Make sure the table has the same ticker/dtime entries as the quotes table does """
         self.cursor.execute('insert ignore into `%s` (`ticker`, `dtime`) '
-                            'select `ticker`, `dtime` from `quotes`' % table)
+                            'select `ticker`, `dtime` from `Quotes`' % table)
         self.db.commit()
 
     def __update_table(self, table, old_columns, new_columns):
@@ -160,7 +160,7 @@ class DBInserter(DB):
     def __init__(self, limit=1000):
         DB.__init__(self)
         self.limit = limit
-        self.quotes_query_base = 'insert ignore into `quotes` (`ticker`, `dtime`, `open`, `high`, `low`, `close`, `vol`) values '
+        self.quotes_query_base = 'insert ignore into `Quotes` (`ticker`, `dtime`, `open`, `high`, `low`, `close`, `vol`) values '
         self.quotes_entries = []
         self.indicators_tables = set([table for table in Config.get('dbstructure') if table != 'quotes'])
         self.indicators_query_base = 'insert ignore into `{}` (`ticker`, `dtime`) values '

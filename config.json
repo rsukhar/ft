@@ -6,7 +6,7 @@
     "database": "ft"
   },
   "dbstructure": {
-    "quotes": {
+    "Quotes": {
       "open": "int(10) unsigned",
       "high": "int(10) unsigned",
       "low": "int(10) unsigned",
@@ -14,31 +14,42 @@
       "vol": "int(10) unsigned",
       "vwap": "int(10) unsigned"
     },
-    "mas": {
-      "ema12": "int(10) unsigned",
-      "ema26": "int(10) unsigned"
+    "EMA": {
+      "EMA(5)": "int(10) unsigned",
+      "EMA(6)": "int(10) unsigned",
+      "EMA(7)": "int(10) unsigned",
+      "EMA(10)": "int(10) unsigned",
+      "EMA(12)": "int(10) unsigned",
+      "EMA(13)": "int(10) unsigned",
+      "EMA(26)": "int(10) unsigned"
     },
-    "chances": {
-      "c1": "decimal(5,2)",
-      "c2": "decimal(5,2)",
-      "c3": "decimal(5,2)",
-      "c4": "decimal(5,2)",
-      "c5": "decimal(5,2)",
-      "c6": "decimal(5,2)",
-      "c7": "decimal(5,2)",
-      "c8": "decimal(5,2)",
-      "c9": "decimal(5,2)",
-      "c10": "decimal(5,2)",
-      "c11": "decimal(5,2)",
-      "c12": "decimal(5,2)",
-      "c13": "decimal(5,2)",
-      "c14": "decimal(5,2)",
-      "c15": "decimal(5,2)",
-      "c16": "decimal(5,2)",
-      "c17": "decimal(5,2)",
-      "c18": "decimal(5,2)",
-      "c19": "decimal(5,2)",
-      "c20": "decimal(5,2)"
+    "MACD": {
+      "MACD(12, 26, 9)": "decimal(5,2)",
+      "MACD(6, 12, 5)": "decimal(5,2)",
+      "MACD(7, 10, 5)": "decimal(5,2)",
+      "MACD(5, 13, 8)": "decimal(5,2)"
+    },
+    "Chance": {
+      "Chance(1)": "decimal(5,2)",
+      "Chance(2)": "decimal(5,2)",
+      "Chance(3)": "decimal(5,2)",
+      "Chance(4)": "decimal(5,2)",
+      "Chance(5)": "decimal(5,2)",
+      "Chance(6)": "decimal(5,2)",
+      "Chance(7)": "decimal(5,2)",
+      "Chance(8)": "decimal(5,2)",
+      "Chance(9)": "decimal(5,2)",
+      "Chance(10)": "decimal(5,2)",
+      "Chance(11)": "decimal(5,2)",
+      "Chance(12)": "decimal(5,2)",
+      "Chance(13)": "decimal(5,2)",
+      "Chance(14)": "decimal(5,2)",
+      "Chance(15)": "decimal(5,2)",
+      "Chance(16)": "decimal(5,2)",
+      "Chance(17)": "decimal(5,2)",
+      "Chance(18)": "decimal(5,2)",
+      "Chance(19)": "decimal(5,2)",
+      "Chance(20)": "decimal(5,2)"
     }
   },
   "fetch": {

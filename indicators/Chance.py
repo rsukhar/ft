@@ -2,18 +2,18 @@ from lib.Count import DBIndicatorCounter
 from lib.Data import Data
 
 
-class CountChances(DBIndicatorCounter):
-    def _count_c(self, date, data=None):
+class CountChance(DBIndicatorCounter):
+    def _count_chance(self, date):
         """
         Relative price difference in the next N minutes
         """
-        if data is None:
-            data = Data.get(['open', 'vwap'], self.ticker, date=date, market_hours=True, order='desc')
+        data = Data.get(['open', 'vwap'], self.ticker, date=date, market_hours=True, order='desc')
+        period = self.params[0]
         history = []
         index = 0
         for dtime, open, vwap in data:
             index += 1
-            if index > self.period:
+            if index > period:
                 index = 1
             if len(history) < index:
                 history.append(vwap)

@@ -14,6 +14,14 @@ def dayend(dtime):
     return dtime.replace(hour=end.hour, minute=end.minute)
 
 
+def daymid(dtime):
+    """ Select the very middle minute of the day """
+    start_minute = start.hour * 60 + start.minute
+    end_minute = end.hour * 60 + end.minute
+    mid_minute = (start_minute + end_minute) / 2
+    return dtime.replace(hour=int(mid_minute / 60), minute=int(mid_minute % 60))
+
+
 def timerange(dtime_start, dtime_end):
     """ Get each minute of market working hours within the requested range """
     dtime = dtime_start
